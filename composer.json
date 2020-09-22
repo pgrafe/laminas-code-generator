@@ -2,7 +2,7 @@
     "name": "pgrafe/laminas-code-generator",
     "description": "Laminas Module that provides basic functionality of code generation",
     "type": "library",
-    "license": "GNU GENERAL PUBLIC LICENSE Version 3",
+    "license": "GPL-3.0-or-later",
     "homepage": "https://github.com/pgrafe/laminas-code-generator",
     "keywords": [
         "doctrine",
