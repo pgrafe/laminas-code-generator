@@ -1,0 +1,31 @@
+<?php
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+
+?>
+<div class="jumbotron">
+    <h1>Willkommen zum super Code Generator</h1>
+
+</div>
+
+<div class="card-deck">
+    <div class="card">
+        <h2 class="card-header">Enums</h2>
+        <div class="card-body">
+            <p>
+                Kann Dir Enums generieren
+            </p>
+            <a class="btn btn-primary" href="<?= $this->url('code-generator',['action' => 'enum']) ?>">Enum Generator &raquo;</a>
+        </div>
+    </div>
+    <div class="card">
+        <h2 class="card-header">Doctrine Entity</h2>
+        <div class="card-body">
+            <p>
+                Kann Dir Entities für als Doctrine XML generieren
+            </p>
+            <a class="btn btn-primary" href="https://getlaminas.org/" target="_blank">Laminas Project Portal &raquo;</a>
+        </div>
+    </div>
+</div>

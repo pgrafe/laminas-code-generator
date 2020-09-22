@@ -1,0 +1,28 @@
+{
+    "name": "pgrafe/laminas-code-generator",
+    "description": "Laminas Module that provides basic functionality of code generation",
+    "type": "library",
+    "license": "GNU GENERAL PUBLIC LICENSE Version 3",
+    "homepage": "https://github.com/pgrafe/laminas-code-generator",
+    "keywords": [
+        "doctrine",
+        "module",
+        "laminas"
+    ],
+    "authors": [
+        {
+            "name": "Philipp Grafe",
+            "email": "p.grafe@gmx.de",
+            "homepage": "https://github.com/pgrafe/"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "ext-dom": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "CodeGenerator\\": "src/"
+        }
+    }
+}
