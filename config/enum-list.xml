@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<enum-list xmlns="http://www.w3schools.com"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.w3schools.com ../../../../vendor/pgrafe/laminas-code-generator/xsd/enum-list.xsd">
+    <enum fqdn="CodeGenerator\Enum\DoctrineType" type="string">
+        <const name="ARRAY" value="array"/>
+        <const name="BIGINT" value="bigint"/>
+        <const name="BINARY" value="binary"/>
+        <const name="BLOB" value="blob"/>
+        <const name="BOOLEAN" value="boolean"/>
+        <const name="DATE_MUTABLE" value="date"/>
+        <const name="DATE_IMMUTABLE" value="date_immutable"/>
+        <const name="DATEINTERVAL" value="dateinterval"/>
+        <const name="DATETIME_MUTABLE" value="datetime"/>
+        <const name="DATETIME_IMMUTABLE" value="datetime_immutable"/>
+        <const name="DATETIMETZ_MUTABLE" value="datetimetz"/>
+        <const name="DATETIMETZ_IMMUTABLE" value="datetimetz_immutable"/>
+        <const name="DECIMAL" value="decimal"/>
+        <const name="FLOAT" value="float"/>
+        <const name="GUID" value="guid"/>
+        <const name="INTEGER" value="integer"/>
+        <const name="JSON" value="json"/>
+        <const name="OBJECT" value="object"/>
+        <const name="SIMPLE_ARRAY" value="simple_array"/>
+        <const name="SMALLINT" value="smallint"/>
+        <const name="STRING" value="string"/>
+        <const name="TEXT" value="text"/>
+        <const name="TIME_MUTABLE" value="time"/>
+        <const name="TIME_IMMUTABLE" value="time_immutable"/>
+    </enum>
+    <enum fqdn="CodeGenerator\Enum\PhpType" type="string">
+        <const name="ARRAY" value="array"/>
+        <const name="INT" value="int"/>
+        <const name="FLOAT" value="float"/>
+        <const name="DATETIME" value="DateTime"/>
+        <const name="BOOL" value="bool"/>
+        <const name="STRING" value="string"/>
+    </enum>
+
+</enum-list>

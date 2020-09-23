@@ -5,9 +5,10 @@ namespace CodeGenerator\Service;
 
 
 use CodeGenerator\Builder\ClassBuilder;
+use CodeGenerator\Enum\DoctrineType;
+use CodeGenerator\Enum\PhpType;
 use CodeGenerator\Model\DoctrineBuildModel;
 use DateTime;
-use Doctrine\DBAL\Types\Types;
 use DOMElement;
 
 class DoctrineService
@@ -90,12 +91,15 @@ class DoctrineService
             $classBuilder->setExtends($doctrineBuildModel->getExtends());
 
             foreach ($doctrineBuildModel->getFieldList() as $_fieldName => $_fieldType) {
-                $phpType = $this->getPhpTypeForDoctrineType($_fieldType);
-                if ($phpType === 'DateTime') {
+                if (!DoctrineType::isValidValue($_fieldType)) {
+                    continue;
+                }
+                $phpType = $this->getPhpTypeForDoctrineType(DoctrineType::create($_fieldType));
+                if ($phpType->equals(PhpType::DATETIME())) {
                     $classBuilder->addUseClass(DateTime::class);
                 }
-                $classBuilder->addCommentBlock(['@var ' . $phpType]);
-                $classBuilder->addContentLine('protected ' . $phpType . ' $' . $_fieldName . ';');
+                $classBuilder->addCommentBlock(['@var ' . $phpType->getValue()]);
+                $classBuilder->addContentLine('protected ' . $phpType->getValue() . ' $' . $_fieldName . ';');
             }
             file_put_contents($doctrineBuildModel->getFilePath(), $classBuilder->buildClass());
         }
@@ -138,39 +142,39 @@ class DoctrineService
     }
 
     /**
-     * @param string $doctrineType
-     * @return string
+     * @param DoctrineType $doctrineType
+     * @return PhpType
      */
-    private function getPhpTypeForDoctrineType(string $doctrineType): string
+    private function getPhpTypeForDoctrineType(DoctrineType $doctrineType): PhpType
     {
-        switch ($doctrineType) {
-            case Types::BIGINT:
-            case Types::SMALLINT:
-            case Types::INTEGER:
+        switch (true) {
+            case $doctrineType->equals(DoctrineType::BIGINT()):
+            case $doctrineType->equals(DoctrineType::SMALLINT()):
+            case $doctrineType->equals(DoctrineType::INTEGER()):
             {
-                return 'int';
+                return PhpType::INT();
             }
-            case Types::SIMPLE_ARRAY:
-            case Types::ARRAY:
+            case $doctrineType->equals(DoctrineType::SIMPLE_ARRAY()):
+            case $doctrineType->equals(DoctrineType::ARRAY()):
             {
-                return 'array';
+                return PhpType::ARRAY();
             }
-            case Types::FLOAT:
-            case Types::DECIMAL:
+            case $doctrineType->equals(DoctrineType::FLOAT()):
+            case $doctrineType->equals(DoctrineType::DECIMAL()):
             {
-                return 'float';
+                return PhpType::FLOAT();
             }
-            case Types::BOOLEAN:
+            case $doctrineType->equals(DoctrineType::BOOLEAN()):
             {
-                return 'bool';
+                return PhpType::BOOL();
             }
-            case Types::DATETIME_MUTABLE:
+            case $doctrineType->equals(DoctrineType::DATETIME_MUTABLE()):
             {
-                return 'DateTime';
+                return PhpType::DATETIME();
             }
             default:
             {
-                return 'string';
+                return PhpType::STRING();
             }
         }
     }
