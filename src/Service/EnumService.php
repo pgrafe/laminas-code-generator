@@ -27,24 +27,24 @@ class EnumService
     public function getEnumBuildModelList(string $path): array
     {
         $enumBuildModelList = [];
-        $xmlFileService = new XmlFileService();
-        $domDocumentList = $xmlFileService->getEnumDomDocumentList($path);
+        $xmlFileService     = new XmlFileService();
+        $domDocumentList    = $xmlFileService->getEnumDomDocumentList($path);
         foreach ($domDocumentList as $DOMDocument) {
             foreach ($DOMDocument->getElementsByTagName('enum') as $DOMNode) {
                 if (!$DOMNode instanceof DOMElement) {
                     continue;
                 }
                 $enumBuildModel = new EnumBuildModel();
-                $enumFQDN = $DOMNode->getAttribute('fqdn');
-                $enumFQDNList = explode('\\', $enumFQDN);
-                $enumName = array_pop($enumFQDNList);
-                $enumNameSpace = implode('\\', $enumFQDNList);
-                $enumType = $DOMNode->getAttribute('type');
+                $enumFQDN       = $DOMNode->getAttribute('fqdn');
+                $enumFQDNList   = explode('\\', $enumFQDN);
+                $enumName       = array_pop($enumFQDNList);
+                $enumNameSpace  = implode('\\', $enumFQDNList);
+                $enumType       = $DOMNode->getAttribute('type');
                 if ($enumName === null) {
-                    return false;
+                    continue;
                 }
                 array_splice($enumFQDNList, 1, 0, ['src']);
-                $enumPath = implode('/', $enumFQDNList) . '/';
+                $enumPath  = implode('/', $enumFQDNList) . '/';
                 $constList = $this->getConstList($DOMNode);
 
                 $enumBuildModel->setBasePath($path);
@@ -69,61 +69,36 @@ class EnumService
     {
         foreach ($enumBuildModelList as $enumBuildModel) {
             $classBuilder = new ClassBuilder();
-            $classBuilder->addContentLine('<?php');
-            $classBuilder->addContentLine('');
-            $classBuilder->addContentLine('');
-            $classBuilder->addContentLine('namespace ' . $enumBuildModel->getNameSpace() . ';');
-            $classBuilder->addContentLine('');
-            $classBuilder->addContentLine('');
-            $classBuilder->addContentLine('use InvalidArgumentException;');
-            $classBuilder->addContentLine('');
-            $classBuilder->addContentLine('');
+            $classBuilder->setNameSpace($enumBuildModel->getNameSpace());
+            $classBuilder->setClassName($enumBuildModel->getName());
+            $classBuilder->addUseClass('InvalidArgumentException');
 
-            $classBuilder->addContentLine('class ' . $enumBuildModel->getName());
-            $classBuilder->addContentLine('{');
-
-            $classBuilder->addContentLine('/**');
-            $classBuilder->addContentLine('* @var ' . $enumBuildModel->getType());
-            $classBuilder->addContentLine('*/');
+            $classBuilder->addCommentBlock(['@var ' . $enumBuildModel->getType()]);
             $classBuilder->addContentLine('private ' . $enumBuildModel->getType() . ' $value;');
             foreach ($enumBuildModel->getConstList() as $_constName => $_constValue) {
-
-                $classBuilder->addContentLine('/**');
-                $classBuilder->addContentLine('* @var ' . $enumBuildModel->getType());
-                $classBuilder->addContentLine('*/');
+                $classBuilder->addCommentBlock(['@var ' . $enumBuildModel->getType()]);
                 if ($enumBuildModel->getType() === 'int') {
                     $classBuilder->addContentLine('private const ' . $_constName . ' = ' . $_constValue . ';');
                 } else {
                     $classBuilder->addContentLine('private const ' . $_constName . ' = \'' . $_constValue . '\';');
                 }
-
-                $classBuilder->addContentLine('/**');
-                $classBuilder->addContentLine('* @return ' . $enumBuildModel->getName());
-                $classBuilder->addContentLine('*/');
-
+                $classBuilder->addCommentBlock(['@return ' . $enumBuildModel->getName()]);
                 $classBuilder->addContentLine('public static function ' . $_constName . '(): ' . $enumBuildModel->getName());
                 $classBuilder->addContentLine('{');
                 $classBuilder->addContentLine('return new self(self::' . $_constName . ');');
                 $classBuilder->addContentLine('}');
             }
-
-
-            $classBuilder->addContentLine('/**');
-            $classBuilder->addContentLine('* @return ' . $enumBuildModel->getType() . '[]');
-            $classBuilder->addContentLine('*/');
+            $classBuilder->addCommentBlock(['@return ' . $enumBuildModel->getType() . '[]']);
             $classBuilder->addContentLine('public static function getConstList(): array');
             $classBuilder->addContentLine('{');
             foreach ($enumBuildModel->getConstList() as $_constName => $_constValue) {
-                $classBuilder->addContentLine('$constList[\'' . $_constName . '\']  = self::' . $_constName . ';');
+                $classBuilder->addContentLine('$constList[\'' . $_constName . '\'] = self::' . $_constName . ';');
             }
+            $classBuilder->addContentLine('');
             $classBuilder->addContentLine('return $constList;');
             $classBuilder->addContentLine('}');
 
-
-            $classBuilder->addContentLine('/**');
-            $classBuilder->addContentLine('* @param ' . $enumBuildModel->getType() . ' $value');
-            $classBuilder->addContentLine('* @return ' . $enumBuildModel->getName());
-            $classBuilder->addContentLine('*/');
+            $classBuilder->addCommentBlock(['@param ' . $enumBuildModel->getType() . ' $value', '@return ' . $enumBuildModel->getName()]);
             $classBuilder->addContentLine('public static function create(' . $enumBuildModel->getType() . ' $value): ' . $enumBuildModel->getName());
             $classBuilder->addContentLine('{');
             $classBuilder->addContentLine('foreach (self::getConstList() as $_const => $_value) {');
@@ -135,55 +110,41 @@ class EnumService
             $classBuilder->addContentLine('throw new InvalidArgumentException(\'invalid enum value: "\' . $value . \'"\');');
             $classBuilder->addContentLine('}');
 
-
-            $classBuilder->addContentLine('/**');
-            $classBuilder->addContentLine('* @param ' . $enumBuildModel->getType() . ' $value');
-            $classBuilder->addContentLine('* @return bool');
-            $classBuilder->addContentLine('*/');
+            $classBuilder->addCommentBlock(['@param ' . $enumBuildModel->getType() . ' $value', '@return bool']);
             $classBuilder->addContentLine('public static function isValidValue(' . $enumBuildModel->getType() . ' $value): bool');
             $classBuilder->addContentLine('{');
             $classBuilder->addContentLine('return in_array($value, self::getConstList(), true);');
             $classBuilder->addContentLine('}');
 
-
-            $classBuilder->addContentLine('/**');
-            $classBuilder->addContentLine('* ' . $enumBuildModel->getName() . ' constructor');
-            $classBuilder->addContentLine('* @param ' . $enumBuildModel->getType() . ' $value');
-            $classBuilder->addContentLine('*/');
+            $classBuilder->addCommentBlock([$enumBuildModel->getName() . ' constructor', '@param ' . $enumBuildModel->getType() . ' $value']);
             $classBuilder->addContentLine('private function __construct(' . $enumBuildModel->getType() . ' $value)');
             $classBuilder->addContentLine('{');
             $classBuilder->addContentLine('$this->value = $value;');
             $classBuilder->addContentLine('}');
 
-
-            $classBuilder->addContentLine('/**');
-            $classBuilder->addContentLine('* @param ' . $enumBuildModel->getName() . ' $' . lcfirst($enumBuildModel->getName()));
-            $classBuilder->addContentLine('* @return bool');
-            $classBuilder->addContentLine('*/');
+            $classBuilder->addCommentBlock(['@param ' . $enumBuildModel->getName() . ' $' . lcfirst($enumBuildModel->getName()), '@return bool']);
             $classBuilder->addContentLine('public function equals(' . $enumBuildModel->getName() . ' $' . lcfirst($enumBuildModel->getName()) . '): bool');
             $classBuilder->addContentLine('{');
             $classBuilder->addContentLine('return $' . lcfirst($enumBuildModel->getName()) . '->getValue() === $this->getValue();');
             $classBuilder->addContentLine('}');
 
-
-            $classBuilder->addContentLine('/**');
-            $classBuilder->addContentLine('*');
-            $classBuilder->addContentLine('* @return ' . $enumBuildModel->getType());
-            $classBuilder->addContentLine('*');
-            $classBuilder->addContentLine('*/');
+            $classBuilder->addCommentBlock(['@return ' . $enumBuildModel->getType()]);
             $classBuilder->addContentLine('public function getValue(): ' . $enumBuildModel->getType());
             $classBuilder->addContentLine('{');
             $classBuilder->addContentLine('return $this->value;');
             $classBuilder->addContentLine('}');
 
-            $classBuilder->addContentLine('}');
-            file_put_contents($enumBuildModel->getFilePath(), implode("\n", $classBuilder->getContentList()));
+            file_put_contents($enumBuildModel->getFilePath(), $classBuilder->buildClass());
         }
 
         return true;
     }
 
-    private function getConstList(DOMElement $DOMNode)
+    /**
+     * @param DOMElement $DOMNode
+     * @return array
+     */
+    private function getConstList(DOMElement $DOMNode): array
     {
         $constList = [];
         foreach ($DOMNode->getElementsByTagName('const') as $_DOMNode) {
