@@ -44,6 +44,10 @@ class EnumBuildModel
      * @var bool
      */
     private bool $status = false;
+    /**
+     * @var string[]
+     */
+    private array $comment_list = [];
 
     /**
      * @return string
@@ -192,5 +196,31 @@ class EnumBuildModel
         $this->status = $status;
     }
 
+    /**
+     * @param array $commentList
+     */
+    public function setCommentList(array $commentList): void
+    {
+        $this->comment_list = [];
+        foreach ($commentList as $_comment) {
+            $this->addComment($_comment);
+        }
+    }
+
+    /**
+     * @param string $_comment
+     */
+    private function addComment(string $_comment): void
+    {
+        $this->comment_list[] = $_comment;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCommentList(): array
+    {
+        return $this->comment_list;
+    }
 
 }

@@ -49,9 +49,11 @@ class EnumService
                 array_splice($enumFQDNList, 1, 0, ['src']);
                 $enumPath  = implode('/', $enumFQDNList) . '/';
                 $constList = $this->getConstList($DOMNode);
+                $commentList = $this->getCommentList($DOMNode);
 
                 $enumBuildModel->setBasePath($path);
                 $enumBuildModel->setConstList($constList);
+                $enumBuildModel->setCommentList($commentList);
                 $enumBuildModel->setName($enumName);
                 $enumBuildModel->setType($enumType);
                 $enumBuildModel->setPath($enumPath);
@@ -79,6 +81,7 @@ class EnumService
             $classBuilder->setNameSpace($enumBuildModel->getNameSpace());
             $classBuilder->setClassName($enumBuildModel->getName());
             $classBuilder->addUseClass('InvalidArgumentException');
+            $classBuilder->setCommentList($enumBuildModel->getCommentList());
 
             $classBuilder->addCommentBlock(['@var ' . $enumBuildModel->getType()]);
             $classBuilder->addContentLine('private ' . $enumBuildModel->getType() . ' $value;');
@@ -182,6 +185,23 @@ class EnumService
         }
 
         return $constList;
+    }
+
+    /**
+     * @param DOMElement $DOMNode
+     * @return string[]
+     */
+    private function getCommentList(DOMElement $DOMNode): array
+    {
+        $commentList = [];
+        foreach ($DOMNode->getElementsByTagName('comment') as $_DOMNode) {
+            if (!$_DOMNode instanceof DOMElement) {
+                continue;
+            }
+            $commentList[] = $_DOMNode->nodeValue;
+        }
+
+        return $commentList;
     }
 
 }

@@ -27,6 +27,10 @@ class ClassBuilder
      * @var string
      */
     private string $extends = '';
+    /**
+     * @var string[]
+     */
+    private array $comment_list = [];
 
     /**
      * @param string $contentLine
@@ -110,7 +114,16 @@ class ClassBuilder
         }
         $contentList[] = '';
         $contentList[] = '';
-        $extends       = '';
+
+        if (count($this->getCommentList()) > 0) {
+            $contentList[] = '/**';
+            foreach ($this->getCommentList() as $_comment) {
+                $contentList[] = ' * ' . trim($_comment);
+            }
+            $contentList[] = ' */';
+        }
+
+        $extends = '';
         if ($this->getExtendsName() !== '') {
             $extends = ' extends ' . $this->getExtendsName();
         }
@@ -148,6 +161,9 @@ class ClassBuilder
      */
     public function addCommentBlock(array $commentList): void
     {
+        if (count($commentList) === 0) {
+            return;
+        }
         $this->addContentLine('/**');
         foreach ($commentList as $_commentLine) {
             $this->addContentLine('* ' . trim($_commentLine));
@@ -174,6 +190,33 @@ class ClassBuilder
         $fullyQualifiedClassNameList = explode('\\', $this->extends);
 
         return array_pop($fullyQualifiedClassNameList);
+    }
+
+    /**
+     * @param array $commentList
+     */
+    public function setCommentList(array $commentList): void
+    {
+        $this->comment_list = [];
+        foreach ($commentList as $_comment) {
+            $this->addComment($_comment);
+        }
+    }
+
+    /**
+     * @param string $_comment
+     */
+    private function addComment(string $_comment): void
+    {
+        $this->comment_list[] = $_comment;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCommentList(): array
+    {
+        return $this->comment_list;
     }
 
 }

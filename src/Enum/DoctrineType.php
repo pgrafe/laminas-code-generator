@@ -7,6 +7,10 @@ namespace CodeGenerator\Enum;
 use InvalidArgumentException;
 
 
+/**
+ * Hallo ein Kommentar
+ * Noch ein Kommentar
+ */
 class DoctrineType
 {
 

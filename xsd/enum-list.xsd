@@ -11,6 +11,7 @@
                 <xs:element name="enum" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="comment" maxOccurs="10"/>
                             <xs:element name="const" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:attribute name="name" use="required">
@@ -27,6 +28,7 @@
                                             </xs:restriction>
                                         </xs:simpleType>
                                     </xs:attribute>
+                                    <xs:attribute name="comment" type="xs:string" use="required"/>
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>

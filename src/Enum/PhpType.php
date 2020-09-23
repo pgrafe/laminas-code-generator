@@ -7,6 +7,9 @@ namespace CodeGenerator\Enum;
 use InvalidArgumentException;
 
 
+/**
+ * Und auch hier noch ein Kommentar
+ */
 class PhpType
 {
 
