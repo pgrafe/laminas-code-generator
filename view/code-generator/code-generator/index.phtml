@@ -1,7 +1,8 @@
 <?php
-/**
- * @var Laminas\View\Renderer\PhpRenderer $this
- */
+
+use Laminas\View\Renderer\PhpRenderer;
+
+/** @var PhpRenderer $this */
 
 ?>
 <div class="jumbotron">
@@ -16,16 +17,16 @@
             <p>
                 Kann Dir Enums generieren
             </p>
-            <a class="btn btn-primary" href="<?= $this->url('code-generator',['action' => 'enum']) ?>">Enum Generator &raquo;</a>
+            <a class="btn btn-primary" href="<?= $this->url('code-generator', ['action' => 'enum']) ?>">Enum Generator &raquo;</a>
         </div>
     </div>
     <div class="card">
         <h2 class="card-header">Doctrine Entity</h2>
         <div class="card-body">
             <p>
-                Kann Dir Entities für als Doctrine XML generieren
+                Kann Dir Entities für Doctrine aus XML generieren
             </p>
-            <a class="btn btn-primary" href="https://getlaminas.org/" target="_blank">Laminas Project Portal &raquo;</a>
+            <a class="btn btn-primary" href="<?= $this->url('code-generator', ['action' => 'doctrine-entity']) ?>">Doctrine Entity Generator &raquo;</a>
         </div>
     </div>
 </div>

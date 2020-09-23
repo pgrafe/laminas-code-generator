@@ -23,6 +23,10 @@ class ClassBuilder
      * @var array
      */
     private array $use_class_list = [];
+    /**
+     * @var string
+     */
+    private string $extends = '';
 
     /**
      * @param string $contentLine
@@ -106,7 +110,11 @@ class ClassBuilder
         }
         $contentList[] = '';
         $contentList[] = '';
-        $contentList[] = 'class ' . $this->getClassName();
+        $extends       = '';
+        if ($this->getExtendsName() !== '') {
+            $extends = ' extends ' . $this->getExtendsName();
+        }
+        $contentList[] = 'class ' . $this->getClassName() . $extends;
         $contentList[] = '{';
 
         $tabCount = 1;
@@ -145,6 +153,27 @@ class ClassBuilder
             $this->addContentLine('* ' . trim($_commentLine));
         }
         $this->addContentLine('*/');
+    }
+
+    /**
+     * @param string $className
+     */
+    public function setExtends(string $className): void
+    {
+        $this->extends = $className;
+        if ($this->extends !== '') {
+            $this->addUseClass($this->extends);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getExtendsName(): string
+    {
+        $fullyQualifiedClassNameList = explode('\\', $this->extends);
+
+        return array_pop($fullyQualifiedClassNameList);
     }
 
 }

@@ -1,0 +1,14 @@
+<?php
+
+use CodeGenerator\Model\DoctrineBuildModel;
+use Laminas\View\Renderer\PhpRenderer;
+
+/** @var PhpRenderer $this */
+/** @var DoctrineBuildModel[] $doctrineBuildModelList */
+$doctrineBuildModelList = $this->get('doctrineBuildModelList');
+
+?>
+<div class="jumbotron">
+    <h1>Willkommen zum super Code Generator</h1>
+    <p><?= count($doctrineBuildModelList) ?> Entities</p>
+</div>

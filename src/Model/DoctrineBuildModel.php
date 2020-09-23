@@ -4,7 +4,7 @@
 namespace CodeGenerator\Model;
 
 
-class EnumBuildModel
+class DoctrineBuildModel
 {
 
     /**
@@ -20,11 +20,6 @@ class EnumBuildModel
     /**
      * @var string
      */
-    private string $type = '';
-
-    /**
-     * @var string
-     */
     private string $path = '';
 
     /**
@@ -35,7 +30,7 @@ class EnumBuildModel
     /**
      * @var array
      */
-    private array $const_list = [];
+    private array $field_list = [];
     /**
      * @var string[]
      */
@@ -44,6 +39,10 @@ class EnumBuildModel
      * @var bool
      */
     private bool $status = false;
+    /**
+     * @var string
+     */
+    private string $extends = '';
 
     /**
      * @return string
@@ -78,35 +77,19 @@ class EnumBuildModel
     }
 
     /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType(string $type): void
-    {
-        $this->type = $type;
-    }
-
-    /**
      * @return array
      */
-    public function getConstList(): array
+    public function getFieldList(): array
     {
-        return $this->const_list;
+        return $this->field_list;
     }
 
     /**
-     * @param array $const_list
+     * @param array $field_list
      */
-    public function setConstList(array $const_list): void
+    public function setFieldList(array $field_list): void
     {
-        $this->const_list = $const_list;
+        $this->field_list = $field_list;
     }
 
     /**
@@ -192,5 +175,20 @@ class EnumBuildModel
         $this->status = $status;
     }
 
+    /**
+     * @param string $className
+     */
+    public function addExtends(string $className):void
+    {
+        $this->extends = $className;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtends(): string
+    {
+        return $this->extends;
+    }
 
 }

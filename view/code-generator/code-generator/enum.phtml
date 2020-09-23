@@ -1,12 +1,16 @@
 <?php
 /**
- * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var PhpRenderer $this
+ * @var EnumBuildModel[] $enumBuildModelList
  */
+
+use CodeGenerator\Model\EnumBuildModel;
+use Laminas\View\Renderer\PhpRenderer;
+
+$enumBuildModelList = $this->get('enumBuildModelList');
 
 ?>
 <div class="jumbotron">
     <h1>Willkommen zum super Enum Generator</h1>
-    <p><?= $this->get('domDocumentCount') ?> Datei(en) gefunden</p>
-    <p><?= $this->get('enumDefinitionCount') ?> Enum(s)</p>
-
+    <p><?= count($enumBuildModelList) ?> Enum(s)</p>
 </div>
